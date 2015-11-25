@@ -2,6 +2,7 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'erb'
 require_relative './session'
+require 'active_support/inflector'
 
 class ControllerBase #applications controller inherits from this
   attr_reader :req, :res, :params
@@ -39,14 +40,20 @@ class ControllerBase #applications controller inherits from this
   # use ERB and binding to evaluate templates
   # pass the rendered html to render_content
   def render(template_name)
-
+    f = File.read(template_name)
+    render_content(
+        ERB.new("<%= f %>").result(binding),
+        'text/html')
+    #"views/#{controller_name}/#{template_name}.html.erb"
   end
 
   # method exposing a `Session` object
   def session
+    @session ||=
   end
 
   # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
+    .send :name
   end
 end
